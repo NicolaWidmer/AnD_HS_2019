@@ -16,19 +16,19 @@ public class JUnitTest {
 
 	final String newLine = System.getProperty("line.separator");
 	String pathPrefix = null;
-	
+
 	public JUnitTest () {
-		Path path = FileSystems.getDefault().getPath("./test/files/").toAbsolutePath();		
+		Path path = FileSystems.getDefault().getPath("./test/files/").toAbsolutePath();
 		pathPrefix = path.toString();
 	}
-	
+
 	private static String normalizeLineEnds(String s) {
 	    return s.replace("\r\n", "\n").replace('\r', '\n');
 	}
-	
-	private void checkEquality(String testFileName) {		
+
+	private void checkEquality(String testFileName) {
 		try {
-			//	
+			//
 			// Define the input and the output files.
 			//
 			File inputFile  = new File (pathPrefix + File.separator + testFileName + ".in.txt");
@@ -39,13 +39,13 @@ public class JUnitTest {
 			String expectedResult = new String(java.nio.file.Files.readAllBytes(outputFile.toPath()));
 			//
 			// Define the input and output streams
-			// 
+			//
 			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			FileInputStream in = new FileInputStream(inputFile);		
-			PrintStream out = new PrintStream(baos);			
+			FileInputStream in = new FileInputStream(inputFile);
+			PrintStream out = new PrintStream(baos);
 			//
 			// Perform the test
-			//		
+			//
 			ReadAndWrite rw = new ReadAndWrite();
 			rw.readAndSolve(in, out);
 			//
@@ -57,34 +57,28 @@ public class JUnitTest {
 			//
 			// Now check for the actual assertion
 			//
-			assertEquals(normalizeLineEnds(expectedResult), normalizeLineEnds(result));		
-		} catch (IOException e) {			
+			assertEquals(normalizeLineEnds(expectedResult), normalizeLineEnds(result));
+		} catch (IOException e) {
 			fail(e.getMessage());
-			
-		}		
+
+		}
 	}
-	
+
 	@Test
 	public void testMini() {
 		checkEquality("mini");
 	}
-	
+
 	@Test
 	public void testSmall() {
 		checkEquality("small");
 	}
-	
+
 	@Test
 	public void testNormal() {
 		checkEquality("normal");
 	}
 	
-	@Test
-	public void testLarge() {
-		// reference solution runs in 2.3 s on i7-8650U
-		// and 1 s on Judge
-		checkEquality("large");
-	}
 
 	@Test
 	public void testDistance() {
@@ -107,36 +101,36 @@ public class JUnitTest {
         g.addEdge(4, 3, 4);
         g.addEdge(4, 5, 1);
         g.addEdge(5, 4, 1);
-		
+
 		String filename = pathPrefix + "/testDistance.dot";
-		
+
 		int[] distances = g.dijkstra(0);
-		
+
 		graphviz(g, distances, filename);
-		
+
 		assertArrayEquals(new int[] {0, 2, 1, 1, 4}, distances);
 	}
-	
+
 	@Test
 	public void testSingle() {
 		/**
 		 * Use this test to debug a single wrong graph.
-		 * 
+		 *
 		 * Copy the distance matrix to string <code>distanceMatrix</code>, set the
 		 * right graph size, and compare the output in the last line of code,
 		 * <code>assertArrayEquals</code>. The test will run your implementation
 		 * of Dijkstra's algorithm, and it will generate GraphViz format
 		 * representation of the input. In red, you can see your distances by nodes.
 		 * You can find this graphviz file in the directory with test files, as testSingle.dot.
-		 * 
+		 *
 		 * To visualize the file, use either some online tool for graphviz visualization:
 		 * e.g., http://www.webgraphviz.com/, or install a local viewer:
 		 * https://www.graphviz.org/download/
 		 */
 		int graphSize = 4;
-		String distanceMatrix = "0 4 1 4 \n" + 
-				"-1 0 -1 -1 \n" + 
-				"2 3 0 3 \n" + 
+		String distanceMatrix = "0 4 1 4 \n" +
+				"-1 0 -1 -1 \n" +
+				"2 3 0 3 \n" +
 				"1 2 4 0 ";
 		String[] strLineArr = distanceMatrix.split("\n");
 		Graph g = new Graph(graphSize);
@@ -149,20 +143,20 @@ public class JUnitTest {
 				}
 			}
 		}
-		
+
 		String filename = pathPrefix + "/testSingle.dot";
-		
+
 		int[] distances = g.dijkstra(0);
-		
+
 		graphviz(g, distances, filename);
-		
+
 		assertArrayEquals(new int[] {0, 4, 1, 4}, distances);
 	}
 
 	private void graphviz(Graph g, int[] distances, String filename) {
 		try {
 	    	PrintWriter writer = new PrintWriter(filename, "UTF-8");
-			
+
 	    	writer.write("digraph G {\n");
 
 			for (int i = 0; i < g.matrix.length; i++) {
@@ -176,9 +170,9 @@ public class JUnitTest {
 					}
 				}
 			}
-			
+
 			writer.write("}\n");
-			
+
 	        writer.close();
 	    } catch (FileNotFoundException e) {
 			// Auto-generated catch block
@@ -189,10 +183,3 @@ public class JUnitTest {
 		}
 	}
 }
-
-
-
-
-
-
-
